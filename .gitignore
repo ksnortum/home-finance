@@ -1,0 +1,13 @@
+# Binary
+target/
+bin/
+*.db
+
+# Eclipse files, folders
+.classpath
+.project
+.settings
+
+# Error logs
+*.log
+
