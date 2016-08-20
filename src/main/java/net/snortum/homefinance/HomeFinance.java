@@ -2,6 +2,7 @@ package net.snortum.homefinance;
 	
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Optional;
 
 import org.apache.log4j.Logger;
@@ -70,8 +71,8 @@ public class HomeFinance extends Application {
 	private void displayMainPane() {
 		try {
 			// Load FXML
-			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(getClass().getResource(HOME_FINANCE_FXML));
+			URL url = getClass().getResource(HOME_FINANCE_FXML);
+			FXMLLoader loader = new FXMLLoader(url);
 			BorderPane root = (BorderPane) loader.load();
 			
 			// Display
@@ -80,7 +81,7 @@ public class HomeFinance extends Application {
 			primaryStage.setScene(scene);
 			primaryStage.show();
 			
-			// Set reference to this instance in controller
+			// Set reference to this instance in controller and stage
 			HomeFinanceController controller = loader.getController();
 			controller.setRootApplication(this);
 			

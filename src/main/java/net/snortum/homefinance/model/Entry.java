@@ -1,15 +1,18 @@
 package net.snortum.homefinance.model;
 
+import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.Optional;
+
+import javafx.beans.property.SimpleObjectProperty;
 
 /**
  * An entry item in the Home Finance system.  Entries can be one of three {@link EntryType}s,
  * each with the same data but different behaviors.  
  * 
  * @author Knute Snortum
- * @version 2016-06-11
+ * @version 2016-08-19
  */
 public interface Entry {
 	
@@ -33,11 +36,13 @@ public interface Entry {
 	int getId();
 	String getDescription();
 	boolean isRecurring();
-	double getAmount();
+	BigDecimal getAmount();
+	SimpleObjectProperty<BigDecimal> amountProperty();
 	String getComment();
 	Optional<URL> getUrl();
 	boolean isPaid();
 	LocalDate getDate();
+	SimpleObjectProperty<LocalDate> dateProperty();
 	Optional<Category> getCategory();
 	String getCategoryDesc();
 	int getCategoryId();

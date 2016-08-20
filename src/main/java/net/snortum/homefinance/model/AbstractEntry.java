@@ -1,27 +1,32 @@
 package net.snortum.homefinance.model;
 
+import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.Optional;
+
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 
 /**
  * Implements most of the {@link Entry} interface. 
  *  
  * @author Knute Snortum
- * @version 2015-12-19
+ * @version 2016-08-19
  */
 public abstract class AbstractEntry implements Entry {
 	
 	protected int id;
-	protected String description;
-	protected boolean recurring;
-	protected double amount;
-	protected String comment;
-	protected Optional<URL> url;
-	protected boolean paid;
-	protected LocalDate date;
-	protected Optional<Category> category;
-	protected EntryType type;
+	protected SimpleStringProperty description;
+	protected SimpleBooleanProperty recurring;
+	protected SimpleObjectProperty<BigDecimal> amount;
+	protected SimpleStringProperty comment;
+	protected SimpleObjectProperty<Optional<URL>> url;
+	protected SimpleBooleanProperty paid;
+	protected SimpleObjectProperty<LocalDate> date;
+	protected SimpleObjectProperty<Optional<Category>> category;
+	protected SimpleObjectProperty<EntryType> type;
 
 	/**
 	 * Used to create {@link Entry} objects
@@ -38,7 +43,7 @@ public abstract class AbstractEntry implements Entry {
 		int id = 0;
 		String description = "";
 		boolean recurring = false;
-		double amount = 0.0;
+		BigDecimal amount = BigDecimal.ZERO;
 		String comment = "";
 		Optional<URL> url = Optional.empty();
 		boolean paid = false;
@@ -85,7 +90,7 @@ public abstract class AbstractEntry implements Entry {
 		 * @param amount The amount of the entry
 		 * @return this object
 		 */
-		public Builder amount(double amount) {
+		public Builder amount(BigDecimal amount) {
 			this.amount = amount;
 			return this;
 		}
@@ -154,48 +159,69 @@ public abstract class AbstractEntry implements Entry {
 
 	}
 	
+	@Override
 	public int getId() {
 		return id;
 	}
 
+	@Override
 	public String getDescription() {
-		return description;
+		return description.get();
 	}
 
+	@Override
 	public boolean isRecurring() {
-		return recurring;
+		return recurring.get();
 	}
 
-	public double getAmount() {
+	@Override
+	public BigDecimal getAmount() {
+		return amount.get();
+	}
+	
+	@Override
+	public SimpleObjectProperty<BigDecimal> amountProperty() {
 		return amount;
 	}
 
+	@Override
 	public String getComment() {
-		return comment;
+		return comment.get();
 	}
 	
+	@Override
 	public Optional<URL> getUrl() {
-		return url;
+		return url.get();
 	}
 	
+	@Override
 	public boolean isPaid() {
-		return paid;
+		return paid.get();
 	}
 
+	@Override
 	public LocalDate getDate() {
+		return date.get();
+	}
+	
+	@Override
+	public SimpleObjectProperty<LocalDate> dateProperty() {
 		return date;
 	}
 	
+	@Override
 	public Optional<Category> getCategory() {
-		return category;
+		return category.get();
 	}
 	
+	@Override
 	public String getCategoryDesc() {
-		return category.isPresent() ? category.get().getDescription() : "";
+		return category.get().isPresent() ? category.get().get().getDescription() : "";
 	}
 	
+	@Override
 	public int getCategoryId() {
-		return category.isPresent() ? category.get().getId() : 0;
+		return category.get().isPresent() ? category.get().get().getId() : 0;
 	}
 
 }
