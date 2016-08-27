@@ -13,7 +13,7 @@ import javafx.beans.property.SimpleStringProperty;
  * Implements most of the {@link Entry} interface. 
  *  
  * @author Knute Snortum
- * @version 2016-08-19
+ * @version 2016-08-20
  */
 public abstract class AbstractEntry implements Entry {
 	
@@ -25,14 +25,16 @@ public abstract class AbstractEntry implements Entry {
 	protected SimpleObjectProperty<Optional<URL>> url;
 	protected SimpleBooleanProperty paid;
 	protected SimpleObjectProperty<LocalDate> date;
-	protected SimpleObjectProperty<Optional<Category>> category;
-	protected SimpleObjectProperty<EntryType> type;
+	protected SimpleBooleanProperty reconciled;
+	protected Optional<Category> category;
+	protected SimpleStringProperty categoryDesc; 
+	protected EntryType type;
 
 	/**
 	 * Used to create {@link Entry} objects
 	 * 
 	 * @author Knute Snortum
-	 * @version 2015-12-13
+	 * @version 2016-08-21
 	 */
 	public static abstract class Builder {
 		
@@ -48,6 +50,7 @@ public abstract class AbstractEntry implements Entry {
 		Optional<URL> url = Optional.empty();
 		boolean paid = false;
 		LocalDate date = LocalDate.now();
+		boolean reconciled = false;
 		Optional<Category> category = Optional.empty();
 		
 		/**
@@ -133,12 +136,21 @@ public abstract class AbstractEntry implements Entry {
 		}
 		
 		/**
+		 * @param recociled Is this entry reconciled to the bank?
+		 * @return this object
+		 */
+		public Builder reconciled(boolean reconciled) {
+			this.reconciled = reconciled;
+			return this;
+		}
+		
+		/**
 		 * @param category A {@link Category} object which is the category of 
 		 *        this entry
 		 * @return this object
 		 */
-		public Builder category(Category category) {
-			this.category = Optional.of(category);
+		public Builder category(Optional<Category> category) {
+			this.category = category;
 			return this;
 		}
 		
@@ -163,15 +175,30 @@ public abstract class AbstractEntry implements Entry {
 	public int getId() {
 		return id;
 	}
-
+	
+	@Override
+	public void setId(int id) {
+		this.id = id;
+	}
+	
 	@Override
 	public String getDescription() {
 		return description.get();
+	}
+	
+	@Override
+	public SimpleStringProperty descriptionProperty() {
+		return description;
 	}
 
 	@Override
 	public boolean isRecurring() {
 		return recurring.get();
+	}
+	
+	@Override
+	public SimpleBooleanProperty recurringProperty() {
+		return recurring;
 	}
 
 	@Override
@@ -189,14 +216,29 @@ public abstract class AbstractEntry implements Entry {
 		return comment.get();
 	}
 	
+	@Override 
+	public SimpleStringProperty commentProperty() {
+		return comment;
+	}
+	
 	@Override
 	public Optional<URL> getUrl() {
 		return url.get();
 	}
 	
 	@Override
+	public SimpleObjectProperty<Optional<URL>> urlProperty() {
+		return url;
+	}
+	
+	@Override
 	public boolean isPaid() {
 		return paid.get();
+	}
+	
+	@Override
+	public SimpleBooleanProperty paidProperty() {
+		return paid;
 	}
 
 	@Override
@@ -210,18 +252,34 @@ public abstract class AbstractEntry implements Entry {
 	}
 	
 	@Override
+	public boolean isReconciled() {
+		return reconciled.get();
+	}
+
+	@Override
+	public SimpleBooleanProperty recociledProperty() {
+		return reconciled;
+	}
+
+	@Override
 	public Optional<Category> getCategory() {
-		return category.get();
+		return category;
 	}
 	
 	@Override
 	public String getCategoryDesc() {
-		return category.get().isPresent() ? category.get().get().getDescription() : "";
+		return category.isPresent() ? category.get().getDescription() : "";
 	}
 	
 	@Override
-	public int getCategoryId() {
-		return category.get().isPresent() ? category.get().get().getId() : 0;
+	public SimpleStringProperty categoryDescProperty() {
+		categoryDesc.set(getCategoryDesc());
+		return categoryDesc;
+	}
+
+	@Override
+	public EntryType getType() {
+		return type;
 	}
 
 }

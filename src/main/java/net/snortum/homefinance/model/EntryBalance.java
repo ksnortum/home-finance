@@ -4,8 +4,8 @@ public class EntryBalance extends AbstractEntry {
 
 	public static class Builder extends AbstractEntry.Builder {
 
-		public Builder(EntryType type) {
-			super(type);
+		public Builder() {
+			super(EntryType.BAL);
 		}
 
 		@Override
@@ -24,31 +24,8 @@ public class EntryBalance extends AbstractEntry {
 		this.url.set(builder.url);
 		this.paid.set(builder.paid);
 		this.date.set(builder.date);
-		this.category.set(builder.category);
-		this.type.set(EntryType.BAL);
-	}
-	
-	/**
-	 * Return a new EntryBalance object with a new ID
-	 * 
-	 * @param id the new ID
-	 * @param entry all the other values
-	 */
-	public EntryBalance(int id, EntryBalance entry) {
-		this.id = id;
-		this.description.set(entry.getDescription());
-		this.recurring.set(entry.isRecurring());
-		this.amount.set(entry.getAmount());
-		this.comment.set(entry.getComment());
-		this.url.set(entry.getUrl());
-		this.paid.set(entry.isPaid());
-		this.date.set(entry.getDate());
-		this.category.set(entry.getCategory());
-		this.type.set(entry.getType());
-	}
-
-	public EntryType getType() {
-		return type.get();
+		this.category = builder.category;
+		this.categoryDesc.set(this.category.get().getDescription());
 	}
 
 }

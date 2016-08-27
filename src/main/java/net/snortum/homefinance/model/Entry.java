@@ -5,7 +5,9 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.Optional;
 
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 
 /**
  * An entry item in the Home Finance system.  Entries can be one of three {@link EntryType}s,
@@ -22,29 +24,37 @@ public interface Entry {
 			+ "id          INTEGER PRIMARY KEY AUTOINCREMENT,"
 			+ "description TEXT,"
 			+ "type        TEXT    CHECK(type = 'in' OR type = 'out' OR type = 'balance'),"
-			+ "recurring   INTEGER CHECK(recurring = 0 OR recurring = 1),"
+			+ "recurring   BOOLEAN,"
 			+ "amount      REAL    CHECK(amount >= 0),"
 			+ "comment     TEXT,"
 			+ "url         TEXT,"
-			+ "paid        INTEGER CHECK(paid = 0 OR paid = 1),"
-			+ "date        INTEGER,"
-			+ "reconciled  INTEGER CHECK(reconciled = 0 OR reconciled = 1),"
+			+ "paid        BOOLEAN,"
+			+ "date        DATE,"
+			+ "reconciled  BOOLEAN,"
 			+ "category_id INTEGER NOT NULL,"
 			+ "FOREIGN KEY (category_id) REFERENCES category(id)"
 			+ ")";
 	
 	int getId();
+	void setId(int id);
+	EntryType getType();
 	String getDescription();
+	SimpleStringProperty descriptionProperty();
 	boolean isRecurring();
+	SimpleBooleanProperty recurringProperty();
 	BigDecimal getAmount();
 	SimpleObjectProperty<BigDecimal> amountProperty();
 	String getComment();
+	SimpleStringProperty commentProperty();
 	Optional<URL> getUrl();
+	SimpleObjectProperty<Optional<URL>> urlProperty();
 	boolean isPaid();
+	SimpleBooleanProperty paidProperty();
 	LocalDate getDate();
 	SimpleObjectProperty<LocalDate> dateProperty();
+	boolean isReconciled();
+	SimpleBooleanProperty recociledProperty();
 	Optional<Category> getCategory();
 	String getCategoryDesc();
-	int getCategoryId();
-	EntryType getType();
+	SimpleStringProperty categoryDescProperty();
 }
