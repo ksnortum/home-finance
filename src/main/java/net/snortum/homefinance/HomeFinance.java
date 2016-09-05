@@ -26,9 +26,10 @@ import net.snortum.homefinance.util.DbInitialization;
 public class HomeFinance extends Application {
 	private static final Logger LOG = Logger.getLogger(HomeFinance.class);
 
-	private static final String HOME_FINANCE_FXML = "HomeFinance.fxml";
-	private static final String CATEGORY_MAINTENANCE_FXML = "view/CategoryMaintenance.fxml";
-	private static final String BUDGET_MAINTENANCE_FXML = "view/BudgetMaintenance.fxml";
+	private static final String HOME_FINANCE_FXML = "/fxml/HomeFinance.fxml";
+	private static final String CATEGORY_MAINTENANCE_FXML = "/fxml/CategoryMaintenance.fxml";
+	private static final String BUDGET_MAINTENANCE_FXML = "/fxml/BudgetMaintenance.fxml";
+	private static final boolean TESTING = false;
 	
 	private Stage primaryStage;
 	
@@ -37,10 +38,8 @@ public class HomeFinance extends Application {
 		primaryStage = stage;
 		File dbFile = new File(DbConnection.DB);
 		
-		if (dbFile.exists()) {
-    		displayMainPane();
-		} else {
-			Alert alert = new Alert(AlertType.CONFIRMATION);
+		if ( ! dbFile.exists() ) {
+ 			Alert alert = new Alert(AlertType.CONFIRMATION);
 			alert.setHeaderText("Confirm New Installation");
 			alert.setContentText("Do you want to setup a new installation?");
 			Optional<ButtonType> result = alert.showAndWait();
@@ -52,9 +51,6 @@ public class HomeFinance extends Application {
 			
 			if ( DbInitialization.createTables() ) {
 				DbInitialization.populateTables();
-				
-				// TODO launch entry
-				displayMainPane();
 			} else {
 				Alert warning = new Alert(AlertType.WARNING);
 				warning.setHeaderText("Error Initializing");
@@ -63,16 +59,21 @@ public class HomeFinance extends Application {
 				System.exit(2);
 			}
 		}
+		
+		if (TESTING) {
+			DbInitialization.addDepositsForTesting();
+		}
+		
+		displayMainPane();
 	}
 
-	/**
-	 * 
-	 */
 	private void displayMainPane() {
 		try {
 			// Load FXML
 			URL url = getClass().getResource(HOME_FINANCE_FXML);
+			LOG.info("URL of main display pane: " + url);
 			FXMLLoader loader = new FXMLLoader(url);
+			LOG.info("Location of main display pane: " + loader.getLocation());
 			BorderPane root = (BorderPane) loader.load();
 			
 			// Display
@@ -94,8 +95,8 @@ public class HomeFinance extends Application {
 	public void showCategoryMaintenance() {
 		try {
 			// Load FXML
-			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(getClass().getResource(CATEGORY_MAINTENANCE_FXML));
+			URL url = getClass().getResource(CATEGORY_MAINTENANCE_FXML);
+			FXMLLoader loader = new FXMLLoader(url);
 			VBox pane = (VBox) loader.load();
 			
 			// Create a new window and make it modal
@@ -122,8 +123,8 @@ public class HomeFinance extends Application {
 	public void showBudgetMaintenance() {
 		try {
 			// Load FXML
-			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(getClass().getResource(BUDGET_MAINTENANCE_FXML));
+			URL url = getClass().getResource(BUDGET_MAINTENANCE_FXML);
+			FXMLLoader loader = new FXMLLoader(url);
 			AnchorPane pane = (AnchorPane) loader.load();
 			
 			// Create a new window and make it modal

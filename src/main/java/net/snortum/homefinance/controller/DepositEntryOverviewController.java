@@ -8,11 +8,11 @@ import java.util.Optional;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.Alert.AlertType;
-import net.snortum.homefinance.model.EntryIn;
+import net.snortum.homefinance.model.Entry;
 
 public class DepositEntryOverviewController {
 	
@@ -20,11 +20,11 @@ public class DepositEntryOverviewController {
 	private static final NumberFormat AMOUNT_FORMATTER = NumberFormat.getCurrencyInstance();
 	
 	@FXML
-	private TableView<EntryIn> depositTable; 
+	private TableView<Entry> depositTable; 
 	@FXML
-	private TableColumn<EntryIn, LocalDate> dateColumn;
+	private TableColumn<Entry, LocalDate> dateColumn;
 	@FXML
-	private TableColumn<EntryIn, BigDecimal> amountColumn;
+	private TableColumn<Entry, BigDecimal> amountColumn;
 	
 	@FXML
 	private Label dateLabel;
@@ -67,6 +67,9 @@ public class DepositEntryOverviewController {
 	public void setApplication(
 			DepositEntryApplication depositEntryApplication) {
 		this.depositEntryApplication = depositEntryApplication;
+		
+		// Add observable list data to the table
+        depositTable.setItems(depositEntryApplication.getDepositData()); 
 	}
 	
     /**
@@ -75,10 +78,10 @@ public class DepositEntryOverviewController {
      * 
      * @param person the person or null
      */
-    private void showDepositDetails(Optional<EntryIn> depositOption) {
+    private void showDepositDetails(Optional<Entry> depositOption) {
         if (depositOption.isPresent()) {
             // Fill the labels with info from the deposit object.
-        	EntryIn deposit = depositOption.get();
+        	Entry deposit = depositOption.get();
             dateLabel.setText(deposit.getDate().format(DATE_FORMATTER));
             amountLabel.setText(AMOUNT_FORMATTER.format(deposit.getAmount()));
             descriptionLabel.setText(deposit.getDescription());

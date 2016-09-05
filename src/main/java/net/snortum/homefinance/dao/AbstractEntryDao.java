@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,95 +28,95 @@ import net.snortum.homefinance.util.DbConnection;
 public class AbstractEntryDao implements GenericDao<Entry, Integer> {
 
 	private static final Logger LOG = Logger.getLogger(AbstractEntryDao.class);
+	private static final SimpleDateFormat FORMATTER = new SimpleDateFormat("yyyy-MM-dd");
 
 	private static final String INSERT_SQL = 
-			"INSERT INTO budget ("
-			+ "id, "          // 1
-			+ "description, " // 2
-			+ "type, "        // 3
-			+ "recurring, "   // 4
-			+ "amount, "      // 5
-			+ "comment, "     // 6
-			+ "url, "         // 7
-			+ "paid, "        // 8
-			+ "date, "        // 9
-			+ "reconciled, "  // 10
-			+ "category_id"   // 11
-			+ ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			"INSERT INTO entry ("
+			+ "description, " // 1
+			+ "type, "        // 2
+			+ "recurring, "   // 3
+			+ "amount, "      // 4
+			+ "comment, "     // 5
+			+ "url, "         // 6
+			+ "paid, "        // 7
+			+ "date, "        // 8
+			+ "reconciled, "  // 9
+			+ "category_id"   // 10
+			+ ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	
 	private static final String SELECT_SQL = 
 			"SELECT "
-			+ "id, "          // 1
-			+ "description, " // 2
-			+ "type, "        // 3
-			+ "recurring, "   // 4
-			+ "amount, "      // 5
-			+ "comment, "     // 6
-			+ "url, "         // 7
-			+ "paid, "        // 8
-			+ "date, "        // 9
-			+ "reconciled, "  // 10
-			+ "category_id"   // 11
+			+ "id, "          
+			+ "description, " 
+			+ "type, "        
+			+ "recurring, "   
+			+ "amount, "      
+			+ "comment, "     
+			+ "url, "         
+			+ "paid, "        
+			+ "date, "        
+			+ "reconciled, "  
+			+ "category_id"   
 			+ "FROM entry "
 			+ "WHERE id = ?";
 	
 	private static final String UPDATE_SQL =
 			"UPDATE entry "
-			+ "SET id = ?, "      // 1 not necessary, but keeps the numbering
-			+ "description = ?, " // 2
-			+ "type = ?,"         // 3
-			+ "recurring = ?,"    // 4
-			+ "amount = ?,"       // 5
-			+ "comment = ?,"      // 6
-			+ "url = ?,"          // 7
-			+ "paid = ?,"         // 8
-			+ "date = ?,"         // 9
-			+ "reconciled = ?,"   // 10
-			+ "category_id = ? "  // 11
-			+ "WHERE id = ?";     // 12
+			+ "SET "
+			+ "description = ?, " // 1
+			+ "type = ?,"         // 2
+			+ "recurring = ?,"    // 3
+			+ "amount = ?,"       // 4
+			+ "comment = ?,"      // 5
+			+ "url = ?,"          // 6
+			+ "paid = ?,"         // 7
+			+ "date = ?,"         // 8
+			+ "reconciled = ?,"   // 9
+			+ "category_id = ? "  // 10
+			+ "WHERE id = ?";     // 11
 	
 	private static final String DELETE_SQL =
-			"DELETE FROM budget "
+			"DELETE FROM entry "
 			+ "WHERE id = ?";
 	
 	private static final String LIST_SQL =
 			"SELECT "
-			+ "id, "          // 1
-			+ "description, " // 2
-			+ "type, "        // 3
-			+ "recurring, "   // 4
-			+ "amount, "      // 5
-			+ "comment, "     // 6
-			+ "url, "         // 7
-			+ "paid, "        // 8
-			+ "date, "        // 9
-			+ "reconciled, "  // 10
-			+ "category_id"   // 11
+			+ "id, "          
+			+ "description, " 
+			+ "type, "        
+			+ "recurring, "   
+			+ "amount, "      
+			+ "comment, "     
+			+ "url, "         
+			+ "paid, "        
+			+ "date, "        
+			+ "reconciled, "  
+			+ "category_id "  
 			+ "FROM entry ";
 	
 	private static final String ID_COLUMN = "id";
-	private static final int ID_PARAM = 1;
+	private static final int ID_PARAM = 11;
 	private static final String DESCRIPTION_COLUMN = "description";
-	private static final int DESCRIPTION_PARAM = 2;
+	private static final int DESCRIPTION_PARAM = 1;
 	private static final String TYPE_COLUMN = "type";
-	private static final int TYPE_PARAM = 3;
+	private static final int TYPE_PARAM = 2;
 	private static final String RECURRING_COLUMN = "recurring";
-	private static final int RECURRING_PARAM = 4;
+	private static final int RECURRING_PARAM = 3;
 	private static final String AMOUNT_COLUMN = "amount";
-	private static final int AMOUNT_PARAM = 5;
+	private static final int AMOUNT_PARAM = 4;
 	private static final String COMMENT_COLUMN = "comment";
-	private static final int COMMENT_PARAM = 6;
+	private static final int COMMENT_PARAM = 5;
 	private static final String URL_COLUMN = "url";
-	private static final int URL_PARAM = 7;
+	private static final int URL_PARAM = 6;
 	private static final String PAID_COLUMN = "paid";
-	private static final int PAID_PARAM = 8;
+	private static final int PAID_PARAM = 7;
 	private static final String DATE_COLUMN = "date";
-	private static final int DATE_PARAM = 9;
+	private static final int DATE_PARAM = 8;
 	private static final String RECONCILED_COLUMN = "reconciled";
-	private static final int RECONCILED_PARAM = 10;
+	private static final int RECONCILED_PARAM = 9;
 	private static final String CATEGORY_ID_COLUMN = "category_id";
-	private static final int CATEGORY_ID_PARAM = 11;
-	private static final int WHERE_ID_PARAM = 12; 
+	private static final int CATEGORY_ID_PARAM = 10;
+	private static final int DELETE_ID_PARAM = 1;
 
 	private final EntryType entryType;
 	private final Optional<Connection> connection;
@@ -161,7 +162,6 @@ public class AbstractEntryDao implements GenericDao<Entry, Integer> {
 		try {
 			con.setAutoCommit(false);
 			PreparedStatement stmnt = con.prepareStatement(INSERT_SQL);
-			stmnt.setInt(ID_PARAM, record.getId());
 			stmnt.setString(DESCRIPTION_PARAM, record.getDescription());
 			stmnt.setString(TYPE_PARAM, entryType.getDesc());
 			stmnt.setBoolean(RECURRING_PARAM, record.isRecurring());
@@ -177,8 +177,15 @@ public class AbstractEntryDao implements GenericDao<Entry, Integer> {
 					? record.getCategory().get().getId()
 					: -1);
 			stmnt.executeUpdate();
-			int id = stmnt.getGeneratedKeys().getInt(ID_COLUMN);
-			record.setId(id);
+			
+ 			// Get auto-generated ID and set it into the record
+			ResultSet rs = stmnt.getGeneratedKeys();
+			if (rs.next()) {
+				record.setId(rs.getInt(1));
+			} else {
+				LOG.error("Could not retrieve the generated key");
+			}
+			
 			con.commit();
 		} catch (SQLException e) {
 			LOG.error("Error inserting a Entry record", e);
@@ -222,13 +229,14 @@ public class AbstractEntryDao implements GenericDao<Entry, Integer> {
 			}
 			
 			description = rs.getString(DESCRIPTION_COLUMN);
-			type = EntryType.valueOf(rs.getString(TYPE_COLUMN));
+			type = EntryType.valueOf(rs.getString(TYPE_COLUMN).toUpperCase());
 			recurring = rs.getBoolean(RECURRING_COLUMN);
 			amount = BigDecimal.valueOf(rs.getDouble(AMOUNT_COLUMN));
 			comment = rs.getString(COMMENT_COLUMN);
 			url = getUrl(rs.getString(URL_COLUMN));
 			paid = rs.getBoolean(PAID_COLUMN);
-			date = LocalDate.parse(rs.getString(DATE_COLUMN));
+			String formattedDate = FORMATTER.format(rs.getDate(DATE_COLUMN));
+			date = LocalDate.parse(formattedDate);
 			reconciled = rs.getBoolean(RECONCILED_COLUMN);
 			categoryId = rs.getInt(CATEGORY_ID_COLUMN);
 		} catch (SQLException e) {
@@ -309,7 +317,6 @@ public class AbstractEntryDao implements GenericDao<Entry, Integer> {
 		try {
 			con.setAutoCommit(false);
 			PreparedStatement stmnt = con.prepareStatement(UPDATE_SQL);
-			stmnt.setInt(ID_PARAM, record.getId());
 			stmnt.setString(DESCRIPTION_PARAM, record.getDescription());
 			stmnt.setString(TYPE_PARAM, entryType.getDesc());
 			stmnt.setBoolean(RECURRING_PARAM, record.isRecurring());
@@ -324,7 +331,7 @@ public class AbstractEntryDao implements GenericDao<Entry, Integer> {
 			stmnt.setInt(CATEGORY_ID_PARAM, record.getCategory().isPresent()
 					? record.getCategory().get().getId()
 					: -1);
-			stmnt.setInt(WHERE_ID_PARAM, record.getId());
+			stmnt.setInt(ID_PARAM, record.getId());
 			recordsAffected = stmnt.executeUpdate();
 			con.commit();
 		} catch (SQLException e) {
@@ -347,7 +354,7 @@ public class AbstractEntryDao implements GenericDao<Entry, Integer> {
 		try {
 			con.setAutoCommit(false);
 			PreparedStatement stmnt = con.prepareStatement(DELETE_SQL);
-			stmnt.setInt(ID_PARAM, key);
+			stmnt.setInt(DELETE_ID_PARAM, key);
 			recordsAffected = stmnt.executeUpdate();
 			con.commit();
 		} catch (SQLException e) {
@@ -376,21 +383,19 @@ public class AbstractEntryDao implements GenericDao<Entry, Integer> {
 			while (rs.next()) {
 				int key = rs.getInt(ID_COLUMN);
 				String description = rs.getString(DESCRIPTION_COLUMN);
-				EntryType type = EntryType.valueOf(rs.getString(TYPE_COLUMN));
+				String entryTypeValue = rs.getString(TYPE_COLUMN);
+				EntryType type = EntryType.valueOf(entryTypeValue.toUpperCase());
 				boolean recurring = rs.getBoolean(RECURRING_COLUMN);
 				BigDecimal amount = BigDecimal.valueOf(rs.getDouble(AMOUNT_COLUMN));
 				String comment = rs.getString(COMMENT_COLUMN);
 				URL url = getUrl(rs.getString(URL_COLUMN));
 				boolean paid = rs.getBoolean(PAID_COLUMN);
-				LocalDate date = LocalDate.parse(rs.getString(DATE_COLUMN));
+				String formattedDate = FORMATTER.format(rs.getDate(DATE_COLUMN));
+				LocalDate date = LocalDate.parse(formattedDate);
 				boolean reconciled = rs.getBoolean(RECONCILED_COLUMN);
 				int categoryId = rs.getInt(CATEGORY_ID_COLUMN);
 				CategoryDao categoryDao = new CategoryDao(con);
 				Optional<Category> category = categoryDao.read(categoryId);
-				if (!category.isPresent()) {
-					LOG.error("Entry record error: Category could not be found");
-					return list;
-				}
 				
 				Entry record = null;
 				switch(type) {

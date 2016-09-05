@@ -13,21 +13,21 @@ import javafx.beans.property.SimpleStringProperty;
  * Implements most of the {@link Entry} interface. 
  *  
  * @author Knute Snortum
- * @version 2016-08-20
+ * @version 2016-09-01
  */
 public abstract class AbstractEntry implements Entry {
 	
 	protected int id;
-	protected SimpleStringProperty description;
-	protected SimpleBooleanProperty recurring;
-	protected SimpleObjectProperty<BigDecimal> amount;
-	protected SimpleStringProperty comment;
-	protected SimpleObjectProperty<Optional<URL>> url;
-	protected SimpleBooleanProperty paid;
-	protected SimpleObjectProperty<LocalDate> date;
-	protected SimpleBooleanProperty reconciled;
+	protected SimpleStringProperty description = new SimpleStringProperty();
+	protected SimpleBooleanProperty recurring = new SimpleBooleanProperty();
+	protected SimpleObjectProperty<BigDecimal> amount = new SimpleObjectProperty<>();
+	protected SimpleStringProperty comment = new SimpleStringProperty();
+	protected SimpleObjectProperty<Optional<URL>> url = new SimpleObjectProperty<>();
+	protected SimpleBooleanProperty paid = new SimpleBooleanProperty();
+	protected SimpleObjectProperty<LocalDate> date = new SimpleObjectProperty<>();
+	protected SimpleBooleanProperty reconciled = new SimpleBooleanProperty();
 	protected Optional<Category> category;
-	protected SimpleStringProperty categoryDesc; 
+	protected SimpleStringProperty categoryDesc = new SimpleStringProperty(); 
 	protected EntryType type;
 
 	/**

@@ -103,7 +103,7 @@ public class CategoryDao implements GenericDao<Category, Integer> {
 
 	@Override
 	public Optional<Category> read(Integer key) {
-		if (!connection.isPresent()) {
+		if (!connection.isPresent() || key < 0) {
 			return Optional.empty();
 		}
 

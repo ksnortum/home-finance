@@ -1,8 +1,10 @@
 package net.snortum.homefinance.util;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -11,15 +13,17 @@ import org.apache.log4j.Logger;
 
 import net.snortum.homefinance.dao.BudgetDao;
 import net.snortum.homefinance.dao.CategoryDao;
+import net.snortum.homefinance.dao.EntryInDao;
 import net.snortum.homefinance.model.Budget;
 import net.snortum.homefinance.model.Category;
 import net.snortum.homefinance.model.Entry;
+import net.snortum.homefinance.model.EntryIn;
 
 /**
- * Initialize a database for its first use
+ * Initialize a database for its first use and add some suggested categories.
  * 
  * @author Knute Snortum
- * @version 2016-06-09
+ * @version 2016-08-29
  */
 public class DbInitialization {
 	private static final Logger LOG = Logger.getLogger(DbInitialization.class);
@@ -31,7 +35,7 @@ public class DbInitialization {
 	 */
 	public static boolean createTables() {
 		Optional<Connection> result = DbConnection.getConnection();
-		if (!result.isPresent()) {
+		if ( ! result.isPresent() ) {
 			return false;
 		}
 		Connection con = result.get();
@@ -93,5 +97,24 @@ public class DbInitialization {
 		}
 		
 		return true;
+	}
+	
+	public static void addDepositsForTesting() {
+		EntryInDao dao = new EntryInDao();
+		Entry deposit = new EntryIn.Builder()
+				.date(LocalDate.of(2016, 8, 1))
+				.amount(BigDecimal.valueOf(2134.67))
+				.build();
+		dao.create(deposit);
+		deposit = new EntryIn.Builder()
+				.date(LocalDate.of(2016, 8, 15))
+				.amount(BigDecimal.valueOf(2145.83))
+				.build();
+		dao.create(deposit);
+		deposit = new EntryIn.Builder()
+				.date(LocalDate.of(2016, 9, 1))
+				.amount(BigDecimal.valueOf(2135.09))
+				.build();
+		dao.create(deposit);
 	}
 }

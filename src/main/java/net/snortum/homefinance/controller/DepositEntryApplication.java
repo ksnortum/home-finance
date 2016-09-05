@@ -2,6 +2,7 @@ package net.snortum.homefinance.controller;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -12,16 +13,17 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import net.snortum.homefinance.model.EntryIn;
+import net.snortum.homefinance.dao.EntryInDao;
+import net.snortum.homefinance.model.Entry;
 
 public class DepositEntryApplication {
 	private static final Logger LOG = Logger.getLogger(DepositEntryApplication.class);
-	private static final String ROOT_FXML_FILE = "/net/snortum/homefinance/view/DepositEntryRoot.fxml";
-	private static final String OVERVIEW_FXML_FILE = "/net/snortum/homefinance/view/DepositEntryOverview.fxml";
+	private static final String ROOT_FXML_FILE = "/fxml/DepositEntryRoot.fxml";
+	private static final String OVERVIEW_FXML_FILE = "/fxml/DepositEntryOverview.fxml";
 	
 	private BorderPane rootLayout;
 	private Stage primaryStage;
-	private ObservableList<EntryIn> depositData = FXCollections.observableArrayList();
+	private ObservableList<Entry> depositData = FXCollections.observableArrayList();
 	
 	public DepositEntryApplication(Stage primaryStage) {
 		this.primaryStage = primaryStage;
@@ -29,7 +31,7 @@ public class DepositEntryApplication {
 		showDepositOverview();
 	}
 
-    public void initRootLayout() {
+    public final void initRootLayout() {
         try {
             // Load root layout from FXML file.
         	URL url = getClass().getResource(ROOT_FXML_FILE);
@@ -48,13 +50,18 @@ public class DepositEntryApplication {
         } catch (IOException e) {
             LOG.error("Error trying to load " + ROOT_FXML_FILE, e);
         }
+        
+        EntryInDao dao = new EntryInDao();
+        List<Entry> list = dao.list();
+        depositData.addAll(list);
     }
 	
-    public void showDepositOverview() {
+    public final void showDepositOverview() {
         try {
             // Load person overview.
         	URL url = getClass().getResource(OVERVIEW_FXML_FILE);
             FXMLLoader loader = new FXMLLoader(url);
+            LOG.info("Deposit Entry Overview location: " + loader.getLocation());
             AnchorPane depositEntryOverview = (AnchorPane) loader.load();
 
             // Set person overview into the center of root layout.
@@ -66,11 +73,15 @@ public class DepositEntryApplication {
             controller.setApplication(this);
             
         } catch (IOException e) {
-            LOG.error("Error trying to lod " + OVERVIEW_FXML_FILE, e);
+            LOG.error("Error trying to load " + OVERVIEW_FXML_FILE, e);
         }
     }
     
     public Stage getPrimaryStage() {
     	return primaryStage;
+    }
+    
+    public ObservableList<Entry> getDepositData() {
+        return depositData;
     }
 }

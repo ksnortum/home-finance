@@ -30,7 +30,7 @@ public class EntryIn extends AbstractEntry {
 		this.paid.set(builder.paid);
 		this.date.set(builder.date);
 		this.category = builder.category;
-		this.categoryDesc.set(this.category.get().getDescription());
+		this.categoryDesc.set(this.category.isPresent() ? this.category.get().getDescription() : "");
 	}
 
 }
