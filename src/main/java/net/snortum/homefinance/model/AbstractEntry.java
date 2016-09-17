@@ -34,7 +34,7 @@ public abstract class AbstractEntry implements Entry {
 	 * Used to create {@link Entry} objects
 	 * 
 	 * @author Knute Snortum
-	 * @version 2016-08-21
+	 * @version 2016-09-15
 	 */
 	public static abstract class Builder {
 		
@@ -42,7 +42,7 @@ public abstract class AbstractEntry implements Entry {
 		EntryType type;
 		
 		// Optional, set default values
-		int id = 0;
+		int id = -1;
 		String description = "";
 		boolean recurring = false;
 		BigDecimal amount = BigDecimal.ZERO;

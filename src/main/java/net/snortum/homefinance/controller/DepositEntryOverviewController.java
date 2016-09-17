@@ -6,16 +6,21 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
+import org.apache.log4j.Logger;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Label;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import net.snortum.homefinance.dao.EntryInDao;
 import net.snortum.homefinance.model.Entry;
 
 public class DepositEntryOverviewController {
 	
+	private static final Logger LOG = Logger.getLogger(DepositEntryOverviewController.class);
 	private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
 	private static final NumberFormat AMOUNT_FORMATTER = NumberFormat.getCurrencyInstance();
 	
@@ -27,21 +32,22 @@ public class DepositEntryOverviewController {
 	private TableColumn<Entry, BigDecimal> amountColumn;
 	
 	@FXML
-	private Label dateLabel;
+	private TextField dateField;
 	@FXML
-	private Label amountLabel;
+	private TextField amountField;
 	@FXML
-	private Label descriptionLabel;
+	private TextField descriptionField;
 	@FXML
-	private Label commentLabel;
+	private TextField commentField;
 	@FXML
-	private Label urlLabel;
+	private TextField urlField;
 	@FXML
-	private Label categoryLabel;
+	private TextField categoryField;
 	@FXML
-	private Label recurringLabel;
+	private CheckBox recurringChk;
 	
 	private DepositEntryApplication depositEntryApplication;
+	private final EntryInDao depositEntryDao = new EntryInDao();
 	
     /**
      * Initializes the controller class. This method is automatically called
@@ -82,22 +88,22 @@ public class DepositEntryOverviewController {
         if (depositOption.isPresent()) {
             // Fill the labels with info from the deposit object.
         	Entry deposit = depositOption.get();
-            dateLabel.setText(deposit.getDate().format(DATE_FORMATTER));
-            amountLabel.setText(AMOUNT_FORMATTER.format(deposit.getAmount()));
-            descriptionLabel.setText(deposit.getDescription());
-            commentLabel.setText(deposit.getComment());
-            urlLabel.setText(deposit.getUrl().isPresent() ? deposit.getUrl().get().toString() : "");
-            categoryLabel.setText(deposit.getCategoryDesc());
-            recurringLabel.setText(deposit.isRecurring() ? "Yes" : "No");
+            dateField.setText(deposit.getDate().format(DATE_FORMATTER));
+            amountField.setText(AMOUNT_FORMATTER.format(deposit.getAmount()));
+            descriptionField.setText(deposit.getDescription());
+            commentField.setText(deposit.getComment());
+            urlField.setText(deposit.getUrl().isPresent() ? deposit.getUrl().get().toString() : "");
+            categoryField.setText(deposit.getCategoryDesc());
+            recurringChk.setSelected(deposit.isRecurring());
         } else {
             // clear all the text.
-        	dateLabel.setText("");
-        	amountLabel.setText("");
-        	descriptionLabel.setText("");
-        	commentLabel.setText("");
-            urlLabel.setText("");
-            categoryLabel.setText("");
-            recurringLabel.setText("");
+        	dateField.setText("");
+        	amountField.setText("");
+        	descriptionField.setText("");
+        	commentField.setText("");
+        	urlField.setText("");
+        	categoryField.setText("");
+        	recurringChk.setSelected(false);
         }
     }
     
@@ -105,19 +111,24 @@ public class DepositEntryOverviewController {
      * Called when the user clicks on the delete button.
      */
     @FXML
-    private void handleDeletePerson() {
+    private void handleDeleteDeposit() {
+    	if (LOG.isInfoEnabled()) {
+    		LOG.info("Delete deposit entry button pressed");
+    	}
         int selectedIndex = depositTable.getSelectionModel().getSelectedIndex();
         if (selectedIndex >= 0) {
+        	// Remove from DB
+        	Entry deposit = depositTable.getItems().get(selectedIndex);
+        	depositEntryDao.delete(deposit.getId());
+        	// Remove from observable list
             depositTable.getItems().remove(selectedIndex);
-            // TODO: remove from DB
         } else {
-            // Nothing selected.
+            // Nothing selected
             Alert alert = new Alert(AlertType.WARNING);
             alert.initOwner(depositEntryApplication.getPrimaryStage());
             alert.setTitle("No Selection");
-            alert.setHeaderText("No Person Selected");
-            alert.setContentText("Please select a person in the table.");
-
+            alert.setHeaderText("No Deposit Selected");
+            alert.setContentText("Please select a deposit in the table.");
             alert.showAndWait();
         }
     }

@@ -26,9 +26,9 @@ import net.snortum.homefinance.util.DbInitialization;
 public class HomeFinance extends Application {
 	private static final Logger LOG = Logger.getLogger(HomeFinance.class);
 
-	private static final String HOME_FINANCE_FXML = "/fxml/HomeFinance.fxml";
-	private static final String CATEGORY_MAINTENANCE_FXML = "/fxml/CategoryMaintenance.fxml";
-	private static final String BUDGET_MAINTENANCE_FXML = "/fxml/BudgetMaintenance.fxml";
+	private static final String HOME_FINANCE_FXML = "controller/HomeFinance.fxml";
+	private static final String CATEGORY_MAINTENANCE_FXML = "controller/CategoryMaintenance.fxml";
+	private static final String BUDGET_MAINTENANCE_FXML = "controller/BudgetMaintenance.fxml";
 	private static final boolean TESTING = false;
 	
 	private Stage primaryStage;

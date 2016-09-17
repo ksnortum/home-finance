@@ -1,6 +1,6 @@
 package net.snortum.homefinance.controller;
 
-import static java.util.stream.Collectors.toList;
+import java.util.stream.Collectors;
 
 import java.util.Optional;
 
@@ -55,7 +55,7 @@ public class BudgetMaintenance {
 		// Get the categories from the DB
 		categories = FXCollections.observableArrayList(categoryDao.list().stream()
 				.map(Category::getDescription)
-				.collect(toList()));
+				.collect(Collectors.toList()));
 		categoryDescription.setItems(categories);
 
 		// Get budget amount and display when category selected
