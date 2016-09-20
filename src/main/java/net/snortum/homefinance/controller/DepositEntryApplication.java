@@ -15,6 +15,13 @@ import javafx.stage.Stage;
 import net.snortum.homefinance.dao.EntryInDao;
 import net.snortum.homefinance.model.Entry;
 
+/**
+ * Display the Deposit Entry form and provide a place for the primary stage of the menu
+ * and the deposit data to exist.  This allows the controller to access this data.
+ *   
+ * @author Knute Snortum
+ * @version 2016-09-19
+ */
 public class DepositEntryApplication {
 	private static final Logger LOG = Logger.getLogger(DepositEntryApplication.class);
 	private static final String ROOT_FXML_FILE = "DepositEntryRoot.fxml";
@@ -73,7 +80,7 @@ public class DepositEntryApplication {
             
             // Give the controller access to the root app.
             DepositEntryOverviewController controller = loader.getController();
-            loader.setController(controller);
+            loader.setController(controller); // TODO: remove?
             controller.setApplication(this);
             
         } catch (IOException e) {

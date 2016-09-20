@@ -34,7 +34,7 @@ public abstract class AbstractEntry implements Entry {
 	 * Used to create {@link Entry} objects
 	 * 
 	 * @author Knute Snortum
-	 * @version 2016-09-15
+	 * @version 2016-09-17
 	 */
 	public static abstract class Builder {
 		
@@ -63,7 +63,26 @@ public abstract class AbstractEntry implements Entry {
 		}
 		
 		/**
-		 * @param id The ID of the entry.  May be zero until the system knows
+		 * Create a builder from another Entry object
+		 * 
+		 * @param entry the Entry object to build from
+		 */
+		public Builder(Entry entry) {
+			this.type = entry.getType();
+			this.id = entry.getId();
+			this.description = entry.getDescription();
+			this.recurring = entry.isRecurring();
+			this.amount = entry.getAmount();
+			this.comment = entry.getComment();
+			this.url = entry.getUrl();
+			this.paid = entry.isPaid();
+			this.date = entry.getDate();
+			this.reconciled = entry.isReconciled();
+			this.category = entry.getCategory();
+		}
+		
+		/**
+		 * @param id The ID of the entry.  May be -1 until the system knows
 		 *        the auto increment number.  
 		 */
 		public Builder id(int id){

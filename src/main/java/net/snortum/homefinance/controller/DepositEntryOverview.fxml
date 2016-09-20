@@ -99,7 +99,7 @@
                     <buttons>
                       <Button defaultButton="true" mnemonicParsing="false" text="Start At..." />
                         <Button mnemonicParsing="false" text="New" />
-                        <Button mnemonicParsing="false" text="Save" />
+                        <Button mnemonicParsing="false" onAction="#handleSaveDeposit" text="Save" />
                         <Button mnemonicParsing="false" onAction="#handleDeleteDeposit" text="Delete">
                            <opaqueInsets>
                               <Insets />

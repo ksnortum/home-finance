@@ -23,6 +23,12 @@ import net.snortum.homefinance.controller.CategoryMaintenance;
 import net.snortum.homefinance.util.DbConnection;
 import net.snortum.homefinance.util.DbInitialization;
 
+/**
+ * Launch the Home Finance main menu and provide a place to hold the primary stage.
+ * 
+ * @author Knute Snortum
+ * @version 2016-09-20
+ */
 public class HomeFinance extends Application {
 	private static final Logger LOG = Logger.getLogger(HomeFinance.class);
 
@@ -38,6 +44,7 @@ public class HomeFinance extends Application {
 		primaryStage = stage;
 		File dbFile = new File(DbConnection.DB);
 		
+		// Setup the DB if this is a new install
 		if ( ! dbFile.exists() ) {
  			Alert alert = new Alert(AlertType.CONFIRMATION);
 			alert.setHeaderText("Confirm New Installation");
@@ -71,9 +78,7 @@ public class HomeFinance extends Application {
 		try {
 			// Load FXML
 			URL url = getClass().getResource(HOME_FINANCE_FXML);
-			LOG.info("URL of main display pane: " + url);
 			FXMLLoader loader = new FXMLLoader(url);
-			LOG.info("Location of main display pane: " + loader.getLocation());
 			BorderPane root = (BorderPane) loader.load();
 			
 			// Display
@@ -87,11 +92,17 @@ public class HomeFinance extends Application {
 			controller.setRootApplication(this);
 			
 		} catch(IOException e) {
-			LOG.error("Could not find " + HOME_FINANCE_FXML);
-			LOG.error(e.getStackTrace());
+			LOG.error("Could not find " + HOME_FINANCE_FXML, e);
+		}
+		
+		if (LOG.isInfoEnabled()) {
+			LOG.info("Main menu launched");
 		}
 	}
 	
+	/**
+	 * Display Category Maintenance when button is clicked
+	 */
 	public void showCategoryMaintenance() {
 		try {
 			// Load FXML
@@ -120,6 +131,9 @@ public class HomeFinance extends Application {
 		}
 	}
 	
+	/**
+	 * Display Budget Maintenance when button is clicked
+	 */
 	public void showBudgetMaintenance() {
 		try {
 			// Load FXML
@@ -148,6 +162,9 @@ public class HomeFinance extends Application {
 		}
 	}
 	
+	/**
+	 * @return the primary stage of the menu (main pane)
+	 */
 	public Stage getPrimaryStage() {
 		return primaryStage;
 	}

@@ -1,7 +1,6 @@
 package net.snortum.homefinance.dao;
 
 import java.math.BigDecimal;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.Date;
@@ -17,6 +16,7 @@ import java.util.Optional;
 
 import org.apache.log4j.Logger;
 
+import net.snortum.homefinance.controller.EntryValidator;
 import net.snortum.homefinance.model.Category;
 import net.snortum.homefinance.model.Entry;
 import net.snortum.homefinance.model.EntryBalance;
@@ -233,7 +233,7 @@ public class AbstractEntryDao implements GenericDao<Entry, Integer> {
 			recurring = rs.getBoolean(RECURRING_COLUMN);
 			amount = BigDecimal.valueOf(rs.getDouble(AMOUNT_COLUMN));
 			comment = rs.getString(COMMENT_COLUMN);
-			url = getUrl(rs.getString(URL_COLUMN));
+			url = EntryValidator.getUrl(rs.getString(URL_COLUMN));
 			paid = rs.getBoolean(PAID_COLUMN);
 			String formattedDate = FORMATTER.format(rs.getDate(DATE_COLUMN));
 			date = LocalDate.parse(formattedDate);
@@ -388,7 +388,7 @@ public class AbstractEntryDao implements GenericDao<Entry, Integer> {
 				boolean recurring = rs.getBoolean(RECURRING_COLUMN);
 				BigDecimal amount = BigDecimal.valueOf(rs.getDouble(AMOUNT_COLUMN));
 				String comment = rs.getString(COMMENT_COLUMN);
-				URL url = getUrl(rs.getString(URL_COLUMN));
+				URL url = EntryValidator.getUrl(rs.getString(URL_COLUMN));
 				boolean paid = rs.getBoolean(PAID_COLUMN);
 				String formattedDate = FORMATTER.format(rs.getDate(DATE_COLUMN));
 				LocalDate date = LocalDate.parse(formattedDate);
@@ -453,14 +453,6 @@ public class AbstractEntryDao implements GenericDao<Entry, Integer> {
 		}
 		
 		return list;
-	}
-
-	private URL getUrl(String url) {
-		try {
-			return new URL(url);
-		} catch (MalformedURLException e) {
-			return null;
-		}
 	}
 
 }
