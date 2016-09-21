@@ -85,6 +85,7 @@ public class HomeFinance extends Application {
 			Scene scene = new Scene(root);
 			//scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
+			primaryStage.setTitle("Home Finance");
 			primaryStage.show();
 			
 			// Set reference to this instance in controller and stage

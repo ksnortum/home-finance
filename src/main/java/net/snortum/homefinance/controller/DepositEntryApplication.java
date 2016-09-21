@@ -11,6 +11,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import net.snortum.homefinance.dao.EntryInDao;
 import net.snortum.homefinance.model.Entry;
@@ -28,31 +29,36 @@ public class DepositEntryApplication {
 	private static final String OVERVIEW_FXML_FILE = "DepositEntryOverview.fxml";
 	
 	private AnchorPane rootLayout;
-	private Stage primaryStage;
+	private Stage entryRootStage;
 	private ObservableList<Entry> depositData = FXCollections.observableArrayList();
 	
 	public DepositEntryApplication(Stage primaryStage) {
-		this.primaryStage = primaryStage;
-		initRootLayout();
+		initRootLayout(primaryStage);
 		showDepositOverview();
 	}
 
-    public final void initRootLayout() {
+    public final void initRootLayout(Stage primaryStage) {
         try {
             // Load root layout from FXML file.
         	URL url = getClass().getResource(ROOT_FXML_FILE);
             FXMLLoader loader = new FXMLLoader(url);
             rootLayout = (AnchorPane) loader.load();
 
+            // Create the root Stage.
+            entryRootStage = new Stage();
+            entryRootStage.setTitle("Deposit Entry");
+            entryRootStage.initModality(Modality.WINDOW_MODAL);
+            entryRootStage.initOwner(primaryStage);
+            
             // Show the scene containing the root layout.
             Scene scene = new Scene(rootLayout);
-            primaryStage.setScene(scene);
+            entryRootStage.setScene(scene);
 
             // Give the controller access to the root app.
             DepositEntryRootController controller = loader.getController();
             controller.setApplication(this);
 
-            primaryStage.show();
+            entryRootStage.show();
         } catch (IOException e) {
             LOG.error("Error trying to load " + ROOT_FXML_FILE, e);
         }
@@ -72,7 +78,7 @@ public class DepositEntryApplication {
 
             // Set person overview into root layout
             // TODO: is it necessary to have a root layout?
-            AnchorPane.setTopAnchor(depositEntryOverview, 40.0);
+            AnchorPane.setTopAnchor(depositEntryOverview, 0.0);
             AnchorPane.setLeftAnchor(depositEntryOverview, 0.0);
             AnchorPane.setRightAnchor(depositEntryOverview, 0.0);
             AnchorPane.setBottomAnchor(depositEntryOverview, 0.0);
@@ -80,7 +86,7 @@ public class DepositEntryApplication {
             
             // Give the controller access to the root app.
             DepositEntryOverviewController controller = loader.getController();
-            loader.setController(controller); // TODO: remove?
+            //loader.setController(controller); // TODO: remove?
             controller.setApplication(this);
             
         } catch (IOException e) {
@@ -88,8 +94,8 @@ public class DepositEntryApplication {
         }
     }
     
-    public Stage getPrimaryStage() {
-    	return primaryStage;
+    public Stage getEntryRootStage() {
+    	return entryRootStage;
     }
     
     public ObservableList<Entry> getDepositData() {

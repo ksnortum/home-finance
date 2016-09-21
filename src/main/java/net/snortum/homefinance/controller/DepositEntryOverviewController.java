@@ -156,6 +156,21 @@ public class DepositEntryOverviewController {
 			depositTable.getItems().add(newDeposit);
 		}
 	}
+	
+	/**
+	 * Called when the user clicks "Ok"
+	 */
+	@FXML
+	private void handleOkButton() {
+		// Save before closing
+		int selectedIndex = depositTable.getSelectionModel().getSelectedIndex();
+		
+		if (selectedIndex >= 0) {
+			handleSaveDeposit();
+		}
+		
+		depositEntryApplication.getEntryRootStage().close();
+	}
 
 	private Optional<Integer> getSelectedIndex() {
 		int selectedIndex = depositTable.getSelectionModel().getSelectedIndex();
@@ -170,7 +185,7 @@ public class DepositEntryOverviewController {
 
 	private void warnNothingSelected() {
 		Alert alert = new Alert(AlertType.WARNING);
-		alert.initOwner(depositEntryApplication.getPrimaryStage());
+		alert.initOwner(depositEntryApplication.getEntryRootStage());
 		alert.setTitle("No Selection");
 		alert.setHeaderText("No Deposit Selected");
 		alert.setContentText(
@@ -191,7 +206,7 @@ public class DepositEntryOverviewController {
 			String errorsText = errors.stream()
 					.collect(Collectors.joining(System.lineSeparator()));
 			Alert alert = new Alert(AlertType.WARNING);
-			alert.initOwner(depositEntryApplication.getPrimaryStage());
+			alert.initOwner(depositEntryApplication.getEntryRootStage());
 			alert.setTitle("Input Errors");
 			alert.setHeaderText("Please Correct These Input Errors");
 			alert.setContentText(errorsText);
