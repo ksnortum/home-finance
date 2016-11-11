@@ -13,7 +13,7 @@ import javafx.beans.property.SimpleStringProperty;
  * Implements most of the {@link Entry} interface. 
  *  
  * @author Knute Snortum
- * @version 2016-09-01
+ * @version 2016-11-06
  */
 public abstract class AbstractEntry implements Entry {
 	
@@ -299,6 +299,11 @@ public abstract class AbstractEntry implements Entry {
 	@Override
 	public EntryType getType() {
 		return type;
+	}
+	
+	@Override
+	public boolean isIdAbsent() {
+		return id == Entry.ABSENT_ID_INDICATOR;
 	}
 
 }

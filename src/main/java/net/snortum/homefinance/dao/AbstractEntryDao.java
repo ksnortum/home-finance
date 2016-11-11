@@ -25,6 +25,14 @@ import net.snortum.homefinance.model.EntryOut;
 import net.snortum.homefinance.model.EntryType;
 import net.snortum.homefinance.util.DbConnection;
 
+/**
+ * Implements most of the Entry DAO methods
+ * 
+ * @author Knute Snortum
+ * @version 2016-11-07
+ * 
+ * TODO: will some of the SQL need to know its type?
+ */
 public class AbstractEntryDao implements GenericDao<Entry, Integer> {
 
 	private static final Logger LOG = Logger.getLogger(AbstractEntryDao.class);
@@ -93,6 +101,7 @@ public class AbstractEntryDao implements GenericDao<Entry, Integer> {
 			+ "reconciled, "  
 			+ "category_id "  
 			+ "FROM entry ";
+			// TODO WHERE type = ?
 	
 	private static final String ID_COLUMN = "id";
 	private static final int ID_PARAM = 11;
@@ -150,7 +159,9 @@ public class AbstractEntryDao implements GenericDao<Entry, Integer> {
 	 * 
 	 * @param record
 	 *            The Entry record to insert into the database
-	 * @return An {@link Optional} of the Entry record with the new ID
+	 * @return An {@link Optional} of the Entry record with the new ID. Optional
+	 *         will be empty if there is no connection, if the new record ID
+	 *         cannot be retrieved, or if there is an SQL exception.
 	 */
 	@Override
 	public Optional<Entry> create(Entry record) {
@@ -184,22 +195,36 @@ public class AbstractEntryDao implements GenericDao<Entry, Integer> {
 				record.setId(rs.getInt(1));
 			} else {
 				LOG.error("Could not retrieve the generated key");
+				return Optional.empty();
 			}
 			
 			con.commit();
 		} catch (SQLException e) {
-			LOG.error("Error inserting a Entry record", e);
+			LOG.error("Error creating Entry record", e);
 
 			try {
 				con.rollback();
 			} catch (SQLException e1) {
-				LOG.error(e1.getMessage());
+				LOG.error("Error trying to rollback transaction", e1);
 			}
+			
+			return Optional.empty();
 		}
 
 		return Optional.of(record);
 	}
 
+	/**
+	 * Read an Entry object from the database, based on an ID
+	 * 
+	 * @param key
+	 *            the key (or ID) to the object to read
+	 * @return An Optional Entry based on {@link EntryType}. The Optional will
+	 *         be empty if the connection is not present, if the ID cannot be
+	 *         found, if the EntryType of the retrieved record is not the type
+	 *         of of the DAO, or if the enter type of the record cannot be
+	 *         found. Check the logs for the specific error.
+	 */
 	@Override
 	public Optional<Entry> read(Integer key) {
 		if (!connection.isPresent()) {
@@ -300,6 +325,14 @@ public class AbstractEntryDao implements GenericDao<Entry, Integer> {
 		return record == null ? Optional.empty() : Optional.of(record);
 	}
 
+	/**
+	 * Update an {@link Entry} row in the database
+	 * 
+	 * @param record
+	 *            The Entry record to update to the database
+	 * @return false if there is no DB connection, if there was a DB error,
+	 *            or if the number of rows affected is not one.
+	 */
 	@Override
 	public boolean update(Entry record) {
 		if (!connection.isPresent()) {
@@ -330,7 +363,7 @@ public class AbstractEntryDao implements GenericDao<Entry, Integer> {
 			stmnt.setBoolean(RECONCILED_PARAM, record.isRecurring());
 			stmnt.setInt(CATEGORY_ID_PARAM, record.getCategory().isPresent()
 					? record.getCategory().get().getId()
-					: -1);
+					: Entry.ABSENT_ID_INDICATOR);
 			stmnt.setInt(ID_PARAM, record.getId());
 			recordsAffected = stmnt.executeUpdate();
 			con.commit();
@@ -342,6 +375,14 @@ public class AbstractEntryDao implements GenericDao<Entry, Integer> {
 		return recordsAffected == 1;
 	}
 
+	/**
+	 * Delete an Entry row based on key (ID).
+	 * 
+	 * @param key
+	 *            the key (ID) of the Entry to delete
+	 * @return false is there is no connection, if there is an SQL exception, or
+	 *         if the number of rows affected is not one.
+	 */
 	@Override
 	public boolean delete(Integer key) {
 		if (!connection.isPresent()) {
@@ -365,6 +406,10 @@ public class AbstractEntryDao implements GenericDao<Entry, Integer> {
 		return recordsAffected == 1;
 	}
 
+	/**
+	 * @return a list of all (TODO all?) entries. List will be empty if there is
+	 *         no DB connection or if there is an SQL exception.
+	 */
 	@Override
 	public List<Entry> list() {
 		List<Entry> list = new ArrayList<>();

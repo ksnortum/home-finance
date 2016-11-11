@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="289.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.snortum.homefinance.controller.DepositEntryOverviewController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="289.0" prefWidth="785.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.snortum.homefinance.controller.DepositEntryOverviewController">
    <children>
       <SplitPane dividerPositions="0.3311036789297659" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
@@ -98,14 +98,15 @@
                   <ButtonBar layoutY="344.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
                     <buttons>
                       <Button defaultButton="true" mnemonicParsing="false" text="Start At..." />
-                        <Button mnemonicParsing="false" text="New" />
+                        <Button mnemonicParsing="false" onAction="#handleNewButton" text="New" />
                         <Button mnemonicParsing="false" onAction="#handleSaveDeposit" text="Save" />
                         <Button mnemonicParsing="false" onAction="#handleDeleteDeposit" text="Delete">
                            <opaqueInsets>
                               <Insets />
                            </opaqueInsets>
                         </Button>
-                        <Button mnemonicParsing="false" onAction="#handleOkButton" text="Ok" />
+                        <Button mnemonicParsing="false" onAction="#handleOkButton" text="OK" />
+                        <Button mnemonicParsing="false" onAction="#handleCancelButton" text="Cancel" />
                     </buttons>
                   </ButtonBar>
                </children>

@@ -19,6 +19,8 @@ import net.snortum.homefinance.model.Entry;
 /**
  * Display the Deposit Entry form and provide a place for the primary stage of the menu
  * and the deposit data to exist.  This allows the controller to access this data.
+ * 
+ * TODO: I don't think we need the root form
  *   
  * @author Knute Snortum
  * @version 2016-09-19
@@ -73,7 +75,7 @@ public class DepositEntryApplication {
             // Load person overview.
         	URL url = getClass().getResource(OVERVIEW_FXML_FILE);
             FXMLLoader loader = new FXMLLoader(url);
-            LOG.info("Deposit Entry Overview location: " + loader.getLocation());
+            LOG.debug("Deposit Entry Overview location: " + loader.getLocation());
             AnchorPane depositEntryOverview = (AnchorPane) loader.load();
 
             // Set person overview into root layout

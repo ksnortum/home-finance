@@ -14,7 +14,7 @@ import javafx.beans.property.SimpleStringProperty;
  * each with the same data but different behaviors.  
  * 
  * @author Knute Snortum
- * @version 2016-08-19
+ * @version 2016-11-06
  */
 public interface Entry {
 	
@@ -34,6 +34,8 @@ public interface Entry {
 			+ "category_id INTEGER NOT NULL,"
 			+ "FOREIGN KEY (category_id) REFERENCES category(id)"
 			+ ")";
+	
+	static final int ABSENT_ID_INDICATOR = -1;
 	
 	int getId();
 	void setId(int id);
@@ -57,4 +59,5 @@ public interface Entry {
 	Optional<Category> getCategory();
 	String getCategoryDesc();
 	SimpleStringProperty categoryDescProperty();
+	boolean isIdAbsent();
 }
