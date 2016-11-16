@@ -4,15 +4,18 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -21,7 +24,9 @@ import javafx.scene.control.TextFormatter;
 import javafx.util.Callback;
 import javafx.util.converter.LocalDateStringConverter;
 import javafx.util.converter.NumberStringConverter;
+import net.snortum.homefinance.dao.CategoryDao;
 import net.snortum.homefinance.dao.EntryInDao;
+import net.snortum.homefinance.model.Category;
 import net.snortum.homefinance.model.Entry;
 import net.snortum.homefinance.model.EntryIn;
 import net.snortum.homefinance.model.EntryInputData;
@@ -29,10 +34,8 @@ import net.snortum.homefinance.model.EntryInputData;
 /**
  * Controls the Deposit Entry form.
  * 
- * TODO: Category as a dropdown
- * 
  * @author Knute Snortum
- * @version 2016-11-09
+ * @version 2016-11-16
  */
 public class DepositEntryOverviewController {
 
@@ -57,12 +60,14 @@ public class DepositEntryOverviewController {
 	@FXML
 	private TextField urlField;
 	@FXML
-	private TextField categoryField;
+	private ChoiceBox<String> categoryChoice;
 	@FXML
 	private CheckBox recurringChk;
 
 	private DepositEntryApplication depositEntryApplication;
 	private final EntryInDao depositEntryDao = new EntryInDao();
+	private final CategoryDao categoryDao = new CategoryDao();
+	private Map<String, Category> categoryMap;
 
 	/**
 	 * Initializes the controller class. This method is automatically called
@@ -80,8 +85,6 @@ public class DepositEntryOverviewController {
 		// Amount needs custom formatting
 		amountColumn.setCellFactory(getCustomCellFactory());
 
-		clearDepositDetails();
-
 		// Listen for selection changes and show the deposit details when
 		// changed.
 		depositTable.getSelectionModel()
@@ -97,6 +100,17 @@ public class DepositEntryOverviewController {
 		dateField.setTextFormatter(new TextFormatter<LocalDate>(
 				new LocalDateStringConverter(EntryValidator.DATE_FORMATTER,
 						EntryValidator.DATE_FORMATTER)));
+		
+		// Setup Category choice box
+		categoryMap = categoryDao.list().stream().collect(
+				Collectors.toMap(x -> x.getDescription(), x -> x));
+		List<String> categoryDescriptions = categoryDao.list().stream()
+				.map(Category::getDescription)
+				.collect(Collectors.toList());
+		categoryChoice.setItems(
+				FXCollections.observableList(categoryDescriptions));
+		
+		clearDepositDetails();
 	}
 
 	/**
@@ -168,7 +182,6 @@ public class DepositEntryOverviewController {
 				}
 			}
 		}
-
 	}
 
 	/**
@@ -216,7 +229,12 @@ public class DepositEntryOverviewController {
 			commentField.setText(deposit.getComment());
 			urlField.setText(deposit.getUrl().isPresent()
 					? deposit.getUrl().get().toString() : "");
-			categoryField.setText(deposit.getCategoryDesc());
+			
+			if ( deposit.getCategory().isPresent() ) {
+				categoryChoice.getSelectionModel()
+						.select(deposit.getCategory().get().getDescription());  
+			}
+			
 			recurringChk.setSelected(deposit.isRecurring());
 		}
 	}
@@ -227,7 +245,7 @@ public class DepositEntryOverviewController {
 		descriptionField.clear();
 		commentField.clear();
 		urlField.clear();
-		categoryField.clear();
+		categoryChoice.getSelectionModel().clearSelection();
 		recurringChk.setSelected(false);
 	}
 
@@ -323,7 +341,7 @@ public class DepositEntryOverviewController {
 				.paid(true)
 				.date(LocalDate.parse(dateField.getText()))
 				.reconciled(true)
-				.category(Optional.empty())
+				.category(getSelectedCategory())
 				.build();
 
 		if (deposit.isIdAbsent()) {
@@ -342,5 +360,15 @@ public class DepositEntryOverviewController {
 		}
 
 		return newDeposit == null ? Optional.empty() : Optional.of(newDeposit);
+	}
+	
+	private Optional<Category> getSelectedCategory() {
+		String categoryDescription = categoryChoice.getSelectionModel().getSelectedItem();
+ 
+		if (categoryDescription == null || categoryDescription.isEmpty()) {
+			return Optional.empty();
+		} else {
+			return Optional.of(categoryMap.get(categoryDescription));
+		}
 	}
 }

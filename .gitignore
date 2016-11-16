@@ -11,3 +11,6 @@ bin/
 # Error logs
 *.log
 
+# IDEA files, folders
+.idea/
+HomeFinance.iml
