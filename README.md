@@ -15,4 +15,6 @@ This software is in development.  It may be useful to look at for seeing how to 
 Alternatively, you can import the source into Eclipse or another IDE and make the project a Maven project, then build.
 
 ## Executing ##
-Currently, the best way to execute is to import the project into an IDE, and run `net.snortum.homefinance.HomeFinance` as a Java app.
+"cd" into the directory you installed into ans issue the command:
+
+	mvn exec:java
