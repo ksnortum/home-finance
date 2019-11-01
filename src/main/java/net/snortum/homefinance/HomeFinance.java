@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.apache.log4j.Logger;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -35,7 +36,7 @@ public class HomeFinance extends Application {
 	private static final String HOME_FINANCE_FXML = "controller/HomeFinance.fxml";
 	private static final String CATEGORY_MAINTENANCE_FXML = "controller/CategoryMaintenance.fxml";
 	private static final String BUDGET_MAINTENANCE_FXML = "controller/BudgetMaintenance.fxml";
-	private static final boolean TESTING = false;
+	private static final boolean TESTING = true;
 	
 	private Stage primaryStage;
 	
@@ -53,7 +54,7 @@ public class HomeFinance extends Application {
 
 			if (result.isPresent() && result.get() == ButtonType.CANCEL) {
 				LOG.error("Could not find DB file " + DbConnection.DB);
-				System.exit(1);
+				Platform.exit();
 			}
 			
 			if ( DbInitialization.createTables() ) {
@@ -63,7 +64,7 @@ public class HomeFinance extends Application {
 				warning.setHeaderText("Error Initializing");
 				warning.setContentText("Could not initialize the DB. Check log file");
 				warning.showAndWait();
-				System.exit(2);
+				Platform.exit();
 			}
 		}
 		
@@ -109,7 +110,7 @@ public class HomeFinance extends Application {
 			// Load FXML
 			URL url = getClass().getResource(CATEGORY_MAINTENANCE_FXML);
 			FXMLLoader loader = new FXMLLoader(url);
-			VBox pane = (VBox) loader.load();
+			VBox pane = loader.<VBox>load();
 			
 			// Create a new window and make it modal
 			Stage dialogStage = new Stage();
