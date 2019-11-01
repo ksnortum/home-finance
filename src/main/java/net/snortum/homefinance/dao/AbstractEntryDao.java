@@ -64,7 +64,7 @@ public class AbstractEntryDao implements GenericDao<Entry, Integer> {
 			+ "paid, "        
 			+ "date, "        
 			+ "reconciled, "  
-			+ "category_id"   
+			+ "category_id "   
 			+ "FROM entry "
 			+ "WHERE id = ?";
 	
