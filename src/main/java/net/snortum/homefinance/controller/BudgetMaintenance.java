@@ -1,10 +1,10 @@
 package net.snortum.homefinance.controller;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-import java.util.Optional;
-
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -23,7 +23,7 @@ import net.snortum.homefinance.model.Category;
 
 public class BudgetMaintenance {
 	
-	private static final Logger LOG = Logger.getLogger(BudgetMaintenance.class);
+	private static final Logger LOG = LogManager.getLogger();
 	
 	// Fields tied to FXML
 	

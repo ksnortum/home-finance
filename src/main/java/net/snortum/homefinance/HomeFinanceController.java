@@ -1,13 +1,14 @@
 package net.snortum.homefinance;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javafx.fxml.FXML;
 import net.snortum.homefinance.controller.DepositEntryApplication;
 
 public class HomeFinanceController {
 	
-	private static final Logger LOG = Logger.getLogger(HomeFinanceController.class);
+	private static final Logger LOG = LogManager.getLogger();
 	
 	private HomeFinance root;
 	

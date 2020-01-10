@@ -5,7 +5,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -31,7 +32,7 @@ import net.snortum.homefinance.util.DbInitialization;
  * @version 2016-09-20
  */
 public class HomeFinance extends Application {
-	private static final Logger LOG = Logger.getLogger(HomeFinance.class);
+	private static final Logger LOG = LogManager.getLogger();
 
 	private static final String HOME_FINANCE_FXML = "controller/HomeFinance.fxml";
 	private static final String CATEGORY_MAINTENANCE_FXML = "controller/CategoryMaintenance.fxml";

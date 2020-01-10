@@ -5,7 +5,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Optional;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Get a connection to the SQLite database file
@@ -14,7 +15,7 @@ import org.apache.log4j.Logger;
  * @version 2015-12-09
  */
 public class DbConnection {
-	private static final Logger LOG = Logger.getLogger(DbConnection.class);
+	private static final Logger LOG = LogManager.getLogger();
 	
 	/** SQLite database file name */
 	public static final String DB = "finance.db";

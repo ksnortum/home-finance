@@ -4,7 +4,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -26,7 +27,7 @@ import net.snortum.homefinance.model.Entry;
  * @version 2016-09-19
  */
 public class DepositEntryApplication {
-	private static final Logger LOG = Logger.getLogger(DepositEntryApplication.class);
+	private static final Logger LOG = LogManager.getLogger();
 	private static final String ROOT_FXML_FILE = "DepositEntryRoot.fxml";
 	private static final String OVERVIEW_FXML_FILE = "DepositEntryOverview.fxml";
 	

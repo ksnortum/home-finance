@@ -8,7 +8,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -39,8 +40,7 @@ import net.snortum.homefinance.model.EntryInputData;
  */
 public class DepositEntryOverviewController {
 
-	private static final Logger LOG = Logger
-			.getLogger(DepositEntryOverviewController.class);
+	private static final Logger LOG = LogManager.getLogger();
 
 	@FXML
 	private TableView<Entry> depositTable;
@@ -144,7 +144,7 @@ public class DepositEntryOverviewController {
 			Entry deposit = depositTable.getItems().get(selectedIndex.get());
 			depositEntryDao.delete(deposit.getId());
 			// Remove from observable list
-			depositTable.getItems().remove(selectedIndex);
+			depositTable.getItems().remove(deposit);
 		} else {
 			warnNothingSelected();
 		}

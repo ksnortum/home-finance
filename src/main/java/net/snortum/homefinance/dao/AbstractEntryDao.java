@@ -14,7 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import net.snortum.homefinance.controller.EntryValidator;
 import net.snortum.homefinance.model.Category;
@@ -35,7 +36,7 @@ import net.snortum.homefinance.util.DbConnection;
  */
 public class AbstractEntryDao implements GenericDao<Entry, Integer> {
 
-	private static final Logger LOG = Logger.getLogger(AbstractEntryDao.class);
+	private static final Logger LOG = LogManager.getLogger();
 	private static final SimpleDateFormat FORMATTER = new SimpleDateFormat("yyyy-MM-dd");
 
 	private static final String INSERT_SQL = 

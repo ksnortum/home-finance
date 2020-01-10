@@ -128,7 +128,6 @@ public abstract class NumberEditingCell<T extends ValueSettable<U>, U extends Nu
 	/**
 	 * Override this method to set the correct amount field in {@code T}.
 	 */
-	@SuppressWarnings("unchecked") // getItem() returns Object but we need T
 	@Override
 	public void commitEdit(U value) {
 		super.commitEdit(value);

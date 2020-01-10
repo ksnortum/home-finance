@@ -9,7 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import net.snortum.homefinance.model.Budget;
 import net.snortum.homefinance.model.Category;
@@ -17,7 +18,7 @@ import net.snortum.homefinance.util.DbConnection;
 
 public class BudgetDao implements GenericDao<Budget, Integer> {
 	
-	private static final Logger LOG = Logger.getLogger(BudgetDao.class);
+	private static final Logger LOG = LogManager.getLogger();
 
 	private static final String INSERT_SQL = 
 			"INSERT INTO budget ("

@@ -9,7 +9,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import net.snortum.homefinance.dao.BudgetDao;
 import net.snortum.homefinance.dao.CategoryDao;
@@ -26,7 +27,7 @@ import net.snortum.homefinance.model.EntryIn;
  * @version 2016-08-29
  */
 public class DbInitialization {
-	private static final Logger LOG = Logger.getLogger(DbInitialization.class);
+	private static final Logger LOG = LogManager.getLogger();
 	
 	/**
 	 * Create tables using the default database connection.
